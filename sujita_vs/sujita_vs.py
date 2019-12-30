@@ -56,13 +56,15 @@ class App:
     # drawでは、updateで起きた変動を受けて、描画を更新する。（基本的に変数の操作はしない）
     def draw(self):
         pyxel.cls(pyxel.COLOR_LIGHTGRAY)
-        pyxel.text(WINDOW_W  / 2, WINDOW_H  / 2 - pyxel.FONT_HEIGHT, "Hello, Sujita!", pyxel.frame_count % 16)
 
         # draw static cat
+        pyxel.text(0,0, "Hello, Sujita!", pyxel.frame_count % 16)
         pyxel.blt(WINDOW_W / 2 - (CAT_W/2), WINDOW_H / 2, 0, 0, 0, self.chara_direction_x * CAT_W, self.chara_direction_y * CAT_H, colkey=5)
 
-        # draw dynamic cat
-        # self.cat()
+        # draw Game Status
+        # rect: X:0 -> WINDOW_W, Y:STAGE_GL -> WINDOW_H :PURPLE
+        pyxel.rect(0, STAGE_GL, WINDOW_W, WINDOW_H - STAGE_GL, pyxel.COLOR_PERPLE)
+        pyxel.rect(0+5, STAGE_GL+5, WINDOW_W-10, WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
 
         #draw sujita
         self.sujita.draw()
@@ -101,10 +103,12 @@ class Tubooji:
     IMAGE_Y = 0
     WIDTH = 64
     HEIGHT = 64
+    HP = 3
 
     def __init__(self,x=0,y=0):
         self.x = x
         self.y = STAGE_GL - self.HEIGHT
+        self.hp = Sujita.HP
 
     def update(self):
         # move 処理
@@ -112,8 +116,8 @@ class Tubooji:
             self.x += -2
         if pyxel.btn(pyxel.KEY_D):
             self.x += 2
-        
-        """
+
+        """ 上下動は抑制
         if pyxel.btn(pyxel.KEY_W):
             self.y += -2
         if pyxel.btn(pyxel.KEY_S):
@@ -131,9 +135,12 @@ class Sujita:
     IMAGE_Y = 0
     WIDTH = 64
     HEIGHT = 64
+    HP = 3
+
     def __init__(self,x=0,y=0):
         self.x = x + 150
         self.y = STAGE_GL - self.HEIGHT
+        self.hp = Sujita.HP
 
     def update(self):
         # move 処理
@@ -141,8 +148,8 @@ class Sujita:
             self.x += -2
         if pyxel.btn(pyxel.KEY_RIGHT):
             self.x += 2
-        
-        """
+
+        """ 上下動は抑制
         if pyxel.btn(pyxel.KEY_UP):
             self.y += -2
         if pyxel.btn(pyxel.KEY_DOWN):
@@ -157,34 +164,8 @@ App()
 
 """
 作業メモ：
-・主人公クラス：つぼおじ/すじた
-　    def 主人公動作()
-　        →update()でコールする。
-　        クリック押下()で攻撃判定
-　    
-　    def 攻撃判定()
-　        攻撃範囲を算出する。現在の攻撃 + 現在位置で計算。
-　        Hit? Yes->"敵"を破壊()->加点() : No->スカリ()->Do nothing
-　    def 攻撃draw()
-　        攻撃判定に即したエフェクト
-　        →"攻撃判定"の範囲(x,y,w,h)は、一時的に確保しておくべき。
-　    def 攻撃変更()
-　        メンバ："現在の攻撃"を範囲内でインクリメントする。
-　            0:パンチ,2:
-　    def 加点()
-　        "敵"から得点をget()する。
-　        得点をメンバ：総得点にAdd()する
-　
-・操作：左キャラ:キーボード, 右キャラ：マウス
-　
-・
-class HitRange:
+・HP
 
-　
-・
-　
-・
-　
 
 
 
