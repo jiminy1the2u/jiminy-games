@@ -8,6 +8,9 @@ MOUSE_VISIBLE = True
 # Ground Level
 STAGE_GL = WINDOW_H - 20
 
+HP_BAR_W = WINDOW_W / 2 -10
+
+
 #TODO: make Cat class
 CAT_W = 16
 CAT_H = 16
@@ -64,7 +67,14 @@ class App:
         # draw Game Status
         # rect: X:0 -> WINDOW_W, Y:STAGE_GL -> WINDOW_H :PURPLE
         pyxel.rect(0, STAGE_GL, WINDOW_W, WINDOW_H - STAGE_GL, pyxel.COLOR_PERPLE)
-        pyxel.rect(0+5, STAGE_GL+5, WINDOW_W-10, WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
+        pyxel.line(WINDOW_W / 2 , STAGE_GL, WINDOW_W / 2 , WINDOW_H, pyxel.COLOR_BLACK)
+        pyxel.line(0, STAGE_GL, WINDOW_W, STAGE_GL, pyxel.COLOR_BLACK)
+        
+        # player1 HP Bar
+        pyxel.rect(0+5, STAGE_GL+5, HP_BAR_W , WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
+        # player2 HP Bar
+        pyxel.rect(WINDOW_W / 2 + 5, STAGE_GL+5, HP_BAR_W , WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
+        
 
         #draw sujita
         self.sujita.draw()
