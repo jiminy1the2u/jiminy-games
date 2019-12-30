@@ -93,6 +93,14 @@ class App:
         if pyxel.btn(pyxel.KEY_SPACE):
             pyxel.rect(self.tubooji.x + Tubooji.WIDTH, oji_centor_y - (attack_h / 2), attack_w,attack_h,pyxel.COLOR_RED)
 
+            # TODO: need DRY code
+            # set damage range (check only X-axis)
+            self.sujita.damage_x1 = self.tubooji.x + Tubooji.WIDTH
+            self.sujita.damage_x2 = self.tubooji.x + Tubooji.WIDTH + attack_w
+        else:
+            self.tubooji.damage_x1 = -1
+            self.tubooji.damage_x2 = -1
+
         # sujita attack: KEY_RIGHT_CONTROL
         suji_centor_x = self.sujita.x + (Sujita.WIDTH  / 2)
         suji_centor_y = self.sujita.y + (Sujita.HEIGHT / 2)
@@ -103,6 +111,14 @@ class App:
                 self.sujita.x - attack_w, suji_centor_y - attack_h,
                 pyxel.COLOR_YELLOW)
 
+            self.tubooji.damage_x1 = self.sujita.x - attack_w
+            self.tubooji.damage_x2 = self.sujita.x
+        else:
+            self.tubooji.damage_x1 = -1
+            self.tubooji.damage_x2 = -1
+
+
+#TODO: Make super class (Player)
 class Tubooji:
     # Image mapping
     IMAGE_N = 1
@@ -110,13 +126,15 @@ class Tubooji:
     IMAGE_Y = 0
     WIDTH = 64
     HEIGHT = 64
-    MAX_HP = 4
+    MAX_HP = 50
 
     def __init__(self,x=0,y=0):
         self.x = x
         self.y = STAGE_GL - self.HEIGHT
-        self.hp = Sujita.MAX_HP
+        self.hp = Tubooji.MAX_HP
         self.alive = True
+        self.damage_x1 = -1
+        self.damage_x2 = -1
 
     def update(self):
         self.damage()
@@ -129,6 +147,12 @@ class Tubooji:
         if pyxel.btn(pyxel.KEY_D):
             self.x += 2
 
+        # 場外禁止
+        if self.x < 0:
+            self.x = 0
+        if self.x > WINDOW_W - Tubooji.WIDTH:
+            self.x = WINDOW_W- Tubooji.WIDTH
+
         """ 上下動は抑制
         if pyxel.btn(pyxel.KEY_W):
             self.y += -2
@@ -137,7 +161,7 @@ class Tubooji:
         """
 
     def damage(self):
-        if pyxel.btnp(pyxel.KEY_P):
+        if self.isOverlap():
             self.hp -= 1
         if(self.hp <= 0):
             self.alive = False
@@ -147,6 +171,11 @@ class Tubooji:
         if not self.alive:
             pyxel.text(0 + 5, 0, "TUBO is DEAD !!", pyxel.COLOR_RED)
 
+    def isOverlap(self):
+        if max(self.x, self.x + self.WIDTH) >= min(self.damage_x1, self.damage_x1) and min(self.x, self.x + self.WIDTH) <= max(self.damage_x1, self.damage_x1):
+            return True
+        else:
+            return False
 
 class Sujita:
     # Image mapping
@@ -155,13 +184,15 @@ class Sujita:
     IMAGE_Y = 0
     WIDTH = 64
     HEIGHT = 64
-    MAX_HP = 4
+    MAX_HP = 50
 
     def __init__(self,x=0,y=0):
         self.x = x + 150
         self.y = STAGE_GL - self.HEIGHT
         self.hp = Sujita.MAX_HP
         self.alive = True
+        self.damage_x1 = -1
+        self.damage_x2 = -1
 
     def update(self):
         self.damage()
@@ -174,6 +205,12 @@ class Sujita:
         if pyxel.btn(pyxel.KEY_RIGHT):
             self.x += 2
 
+        # 場外禁止
+        if self.x < 0:
+            self.x = 0
+        if self.x > WINDOW_W - Sujita.WIDTH:
+            self.x = WINDOW_W- Sujita.WIDTH
+
         """ 上下動は抑制
         if pyxel.btn(pyxel.KEY_UP):
             self.y += -2
@@ -182,7 +219,7 @@ class Sujita:
         """
 
     def damage(self):
-        if pyxel.btnp(pyxel.KEY_K):
+        if self.isOverlap():
             self.hp -= 1
 
         if(self.hp <= 0):
@@ -192,6 +229,12 @@ class Sujita:
         pyxel.blt(self.x, self.y, Sujita.IMAGE_N, Sujita.IMAGE_X, Sujita.IMAGE_Y, Sujita.WIDTH, Sujita.HEIGHT, colkey=pyxel.COLOR_WHITE)
         if not self.alive:
             pyxel.text(WINDOW_W /2 + 5, 0, "SUJITA is DEAD !!", pyxel.COLOR_RED)
+
+    def isOverlap(self):
+        if max(self.x, self.x + self.WIDTH) >= min(self.damage_x1, self.damage_x1) and min(self.x, self.x + self.WIDTH) <= max(self.damage_x1, self.damage_x1):
+            return True
+        else:
+            return False
 
 App()
 
