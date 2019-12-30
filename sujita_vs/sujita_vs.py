@@ -38,7 +38,7 @@ class App:
 
     # updateで内部的な処理を行う。ボタンの受け、数値の変動など
     def update(self):
-        print(pyxel.frame_count)
+        # print(pyxel.frame_count)
 
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
@@ -98,8 +98,8 @@ class App:
             self.sujita.damage_x1 = self.tubooji.x + Tubooji.WIDTH
             self.sujita.damage_x2 = self.tubooji.x + Tubooji.WIDTH + attack_w
         else:
-            self.tubooji.damage_x1 = -1
-            self.tubooji.damage_x2 = -1
+            self.sujita.damage_x1 = -1
+            self.sujita.damage_x2 = -1
 
         # sujita attack: KEY_RIGHT_CONTROL
         suji_centor_x = self.sujita.x + (Sujita.WIDTH  / 2)
@@ -172,7 +172,7 @@ class Tubooji:
             pyxel.text(0 + 5, 0, "TUBO is DEAD !!", pyxel.COLOR_RED)
 
     def isOverlap(self):
-        if max(self.x, self.x + self.WIDTH) >= min(self.damage_x1, self.damage_x1) and min(self.x, self.x + self.WIDTH) <= max(self.damage_x1, self.damage_x1):
+        if max(self.x, self.x + self.WIDTH) >= min(self.damage_x1, self.damage_x2) and min(self.x, self.x + self.WIDTH) <= max(self.damage_x1, self.damage_x2):
             return True
         else:
             return False
@@ -231,7 +231,7 @@ class Sujita:
             pyxel.text(WINDOW_W /2 + 5, 0, "SUJITA is DEAD !!", pyxel.COLOR_RED)
 
     def isOverlap(self):
-        if max(self.x, self.x + self.WIDTH) >= min(self.damage_x1, self.damage_x1) and min(self.x, self.x + self.WIDTH) <= max(self.damage_x1, self.damage_x1):
+        if max(self.x, self.x + self.WIDTH) >= min(self.damage_x1, self.damage_x2) and min(self.x, self.x + self.WIDTH) <= max(self.damage_x1, self.damage_x2):
             return True
         else:
             return False
