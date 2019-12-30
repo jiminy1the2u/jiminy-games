@@ -22,10 +22,10 @@ class App:
         pyxel.mouse(MOUSE_VISIBLE)
         pyxel.load("assets/sujita.pyxres")
         pyxel.image(0).load(0, 0, "assets/cat_16x16.png")
-        
+
         self.reset()
         pyxel.run(self.update, self.draw)
-    
+
     # reset variables
     def reset(self):
         self.chara_direction_x = 1
@@ -59,25 +59,28 @@ class App:
         pyxel.text(WINDOW_W / 2 -16 ,WINDOW_H / 2 - pyxel.FONT_HEIGHT, "Hello, Sujita!", pyxel.COLOR_ORANGE) 
         pyxel.blt(WINDOW_W / 2 - (CAT_W/2), WINDOW_H / 2, 0, 0, 0, self.chara_direction_x * CAT_W, self.chara_direction_y * CAT_H, colkey=5)
 
-        # draw Game Status
-        # rect: X:0 -> WINDOW_W, Y:STAGE_GL -> WINDOW_H :PURPLE
+        # draw status
+        self.draw_status()
+        # draw players
+        self.sujita.draw()
+        self.tubooji.draw()
+        # draw Attack
+        self.draw_player_attack()
+
+    # draw Game Status
+    def draw_status(self):
+        # Status BG
         pyxel.rect(0, STAGE_GL, WINDOW_W, WINDOW_H - STAGE_GL, pyxel.COLOR_PERPLE)
         pyxel.line(WINDOW_W / 2 , STAGE_GL, WINDOW_W / 2 , WINDOW_H, pyxel.COLOR_BLACK)
         pyxel.line(0, STAGE_GL, WINDOW_W, STAGE_GL, pyxel.COLOR_BLACK)
 
-        # player1 HP Bar
-        pyxel.rect(0+5, STAGE_GL+5, HP_BAR_W , WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
-        # player2 HP Bar
-        pyxel.rect(WINDOW_W / 2 + 5, STAGE_GL+5, HP_BAR_W , WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
+        # Tubo HP Bar
+        pyxel.rect(0+5, STAGE_GL+5, HP_BAR_W , WINDOW_H - STAGE_GL-10, pyxel.COLOR_BLACK)
+        pyxel.rect(0+5, STAGE_GL+5, HP_BAR_W * self.tubooji.hp / self.tubooji.MAX_HP , WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
 
-        #draw sujita
-        self.sujita.draw()
-
-        # draw tubooji
-        self.tubooji.draw()
-
-        # draw Attack
-        self.draw_player_attack()
+        # Sujita HP Bar
+        pyxel.rect(WINDOW_W / 2 + 5, STAGE_GL+5, HP_BAR_W , WINDOW_H - STAGE_GL-10, pyxel.COLOR_BLACK)
+        pyxel.rect(WINDOW_W / 2 + 5, STAGE_GL+5, HP_BAR_W * self.sujita.hp / Sujita.MAX_HP , WINDOW_H - STAGE_GL-10, pyxel.COLOR_YELLOW)
 
     # 攻撃判定を作る
     def draw_player_attack(self):
@@ -107,7 +110,7 @@ class Tubooji:
     IMAGE_Y = 0
     WIDTH = 64
     HEIGHT = 64
-    MAX_HP = 3
+    MAX_HP = 4
 
     def __init__(self,x=0,y=0):
         self.x = x
@@ -152,7 +155,7 @@ class Sujita:
     IMAGE_Y = 0
     WIDTH = 64
     HEIGHT = 64
-    MAX_HP = 3
+    MAX_HP = 4
 
     def __init__(self,x=0,y=0):
         self.x = x + 150
@@ -181,6 +184,7 @@ class Sujita:
     def damage(self):
         if pyxel.btnp(pyxel.KEY_K):
             self.hp -= 1
+
         if(self.hp <= 0):
             self.alive = False
 
