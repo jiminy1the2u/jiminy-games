@@ -1,7 +1,7 @@
 import pyxel
 
 # アプリグローバルな定数を切っておく
-WINDOW_W = 200
+WINDOW_W = 240
 WINDOW_H = 120
 MOUSE_VISIBLE = True
 
